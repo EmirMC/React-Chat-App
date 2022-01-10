@@ -1,7 +1,9 @@
+import Add from "./Add";
+
 export default function Rightbar() {
     return (
-        <div className="col-span-3 hidden md:flex overflow-scroll overflow-x-hidden overflow-y-hidden">
-            Rightbar
+        <div className="sidebar">
+            <Add type="add_group_user" addStatus={true} />
         </div>
     )
 }
