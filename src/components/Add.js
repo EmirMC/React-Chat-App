@@ -19,7 +19,7 @@ export default function Add({ type, addStatus }) {
     }
 
     const addFunction = async (data) => {
-        if (type === 'add_group') {
+        if (type === 'add_group' && typeof user.userId === 'string') {
             setGroups((groups) => {
                 let arr = groups;
                 console.log(arr);
@@ -54,6 +54,8 @@ export default function Add({ type, addStatus }) {
             setUser({ userName: data, userId: ToSeoUrl(data) });
             setUsers({ [ToSeoUrl(data)]: { userName: data }, ...users});
             localStorage.setItem("users", JSON.stringify({ [ToSeoUrl(data)]: { userName: data }, ...users}));
+        } else {
+            alert("Sol Üstten Kullanıcı Seçiniz");
         }
 
         setData("");

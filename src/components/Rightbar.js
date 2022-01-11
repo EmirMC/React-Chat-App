@@ -21,12 +21,22 @@ export default function Rightbar() {
         return (<div className="sidebar"></div>);
     }
 
-    const ejectGroups = () => {
-
+    const ejectGroups = (id) => {
+        let arr = groups;
+        let userArr = arr[selectedGroupId].groupUsers;
+        userArr.splice(userArr.indexOf(id));
+        arr[selectedGroupId].groupUsers = userArr;
+        localStorage.setItem("groups", JSON.stringify(arr));
+        setGroups(arr);
     }
 
-    const addGroups = () => {
-
+    const addGroups = (id) => {
+        let arr = groups;
+        let userArr = arr[selectedGroupId].groupUsers;
+        userArr.push(id);
+        arr[selectedGroupId].groupUsers = userArr;
+        localStorage.setItem("groups", JSON.stringify(arr));
+        setGroups(arr);
     }
 
     return (
@@ -35,9 +45,9 @@ export default function Rightbar() {
                 <label className="">Gruptaki Kişiler</label>
                 {groups[selectedGroupId]['groupUsers'].map(id => {
                     return (
-                        <div className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
+                        <div key={id} className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
                             <span>{users[id].userName}</span>
-                            <button className="py-1 px-2 font-black bg-red-600 rounded-md" onClick={() => ejectGroups()}>-</button>
+                            <button className="py-1 px-2 font-black bg-red-600 rounded-md" onClick={() => ejectGroups(id)}>-</button>
                         </div>
                     )
                 })}
@@ -47,9 +57,9 @@ export default function Rightbar() {
                 {Object.keys(users).map(id => {
                     if (groups[selectedGroupId]['groupUsers'].indexOf(id) === -1) {
                         return (
-                            <div className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
+                            <div key={id} className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
                                 <span>{users[id].userName}</span>
-                                <button className="py-1 px-2 font-black bg-red-600 rounded-md" onClick={() => addGroups()}>+</button>
+                                <button className="py-1 px-2 font-black bg-red-600 rounded-md" onClick={() => addGroups(id)}>+</button>
                             </div>
                         )
                     }
