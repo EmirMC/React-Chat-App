@@ -1,63 +1,43 @@
-import Add from "./Add"
+import Add from "./Add";
+import { mainContext, useContext } from "../context/Store";
+import { useEffect } from "react";
 
 export default function Chat() {
+    const { user, selectedGroupId, groups, users, message, setMessage } = useContext(mainContext);
+    useEffect(() => {
+        setMessage(groups.length > 0 && selectedGroupId !== null && typeof groups[selectedGroupId] !== undefined ? groups[selectedGroupId].messages : []);
+
+        /* return () => {
+            setMessage(groups.length > 0 && selectedGroupId !== null && typeof groups[selectedGroupId] !== undefined ? groups[selectedGroupId].messages : []); 
+        } */
+    }, [selectedGroupId, groups]);
+
+    useEffect(() => {
+        console.log("reffresh");
+    }, [message]);
+    
+    if (selectedGroupId === null || Object.keys(users).length === 0 || groups.length === 0) {
+        return (<div className="main"></div>);
+    }
+
     return (
         <div className="main">
             <div className="w-full text-center text-xl text-indigo-600 dark:text-neutral-200 absolute top-2 left-0">
-                <span>Group Title</span>
+                <span>{groups[selectedGroupId].groupName}({message.length})</span>
             </div>
             <div className="overflow-y-auto flex flex-col w-full pr-2">
-                <div className="message message-passive">
-                    <span className="pr-12 text-sm">Emir Mert ÇAMLI</span>
-                    <p>
-                        Text Message
-                        <span className="float-right max-w-min">07:13</span>
-                    </p>
-                </div>
-                <div className="message message-active">
-                    <span className="pr-12 text-sm">Emir Mert ÇAMLI</span>
-                    <p>
-                        Text Message Text Message Text Message Text Message Text Message Text asd Message 
-                        Text Message Text Message Text Message Text Message Text Message Text Message 
-                        Text Message Text Message Text Message Text Message Text Message Text Message 
-                        Text Message Text Messsssssssssssssssaaasdad asd Messsssssssssssssssaaasdad
-                        <span className="float-right max-w-min">07:13</span>
-                    </p>
-                </div>
-                <div className="message message-active">
-                    <span className="pr-12 text-sm">Emir Mert ÇAMLI</span>
-                    <p>
-                        Text Message
-                        <span className="float-right max-w-min">07:13</span>
-                    </p>
-                </div>
-                <div className="message message-passive">
-                    <span className="pr-12 text-sm">Emir Mert ÇAMLI</span>
-                    <p>
-                        Text Message Text Message Text Message Text Message Text Message Text asd Message 
-                        Text Message Text Message Text Message Text Message Text Message Text Message 
-                        Text Message Text Message Text Message Text Message Text Message Text Message 
-                        Text Message Text Messsssssssssssssssaaasdad asd Messsssssssssssssssaaasdad
-                        <span className="float-right max-w-min">07:13</span>
-                    </p>
-                </div>
-                <div className="message message-passive">
-                    <span className="pr-12 text-sm">Emir Mert ÇAMLI</span>
-                    <p>
-                        Text Message
-                        <span className="float-right max-w-min">07:13</span>
-                    </p>
-                </div>
-                <div className="message message-active">
-                    <span className="pr-12 text-sm">Emir Mert ÇAMLI</span>
-                    <p>
-                        Text Message Text Message Text Message Text Message Text Message Text asd Message 
-                        Text Message Text Message Text Message Text Message Text Message Text Message 
-                        Text Message Text Message Text Message Text Message Text Message Text Message 
-                        Text Message Text Messsssssssssssssssaaasdad asd Messsssssssssssssssaaasdad
-                        <span className="float-right max-w-min">07:13</span>
-                    </p>
-                </div>
+                {message.map((val, i) => {
+                    const time = new Date((val.createDate) * 1000);
+                    return (
+                        <div key={i} className={`message message-${val.userId === user.userId ? "active" : "passive"}`}>
+                            <span className="pr-12 text-sm">{Object.keys(users).indexOf(val.userId) !== -1 && typeof users[val.userId].userName !== 'undefined' ? users[val.userId].userName : 'unknown'}</span>
+                            <p>
+                                {val.message}
+                                <span className="float-right max-w-min">{time.getHours() + ":" + time.getMinutes()}</span>
+                            </p>
+                        </div>
+                    )
+                })}
             </div>
             <Add type="add_message" addStatus={false} />
         </div>
