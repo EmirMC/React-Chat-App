@@ -29,7 +29,7 @@ export default function Header() {
         <div className="w-full flex flex-row justify-between border-b-2 border-indigo-600 bg-indigo-600 dark:bg-neutral-800 dark:border-neutral-800 text-white px-4 h-14 items-center">
             <input type="checkbox" className="hidden peer" id="profile" />
             <label className="cursor-pointer" for="profile">{typeof user.userName === 'string' ? user.userName : "Hesap Seç"}</label>
-            <div className="hidden peer-checked:flex bg-indigo-600 dark:bg-neutral-600 absolute top-14 left-0 z-10 flex flex-col border-r border-neutral-200">
+            <div className="hidden peer-checked:flex bg-indigo-600 dark:bg-neutral-600 absolute top-14 left-0 z-10 flex-col border-r border-neutral-200">
                 {Object.keys(users).map(id => {
                     return (
                         <button key={id} className="py-4 px-8 text-white min-w-min text-center border-b border-neutral-200" onClick={() => setUser({ ...users[id], 'userId': id })}>

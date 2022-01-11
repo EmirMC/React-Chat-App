@@ -47,7 +47,7 @@ export default function Rightbar() {
                     return (
                         <div key={id} className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
                             <span>{users[id].userName}</span>
-                            <button className="py-1 px-2 font-black bg-red-600 rounded-md" onClick={() => ejectGroups(id)}>-</button>
+                            <button className="py-1 px-4 font-black bg-red-600 rounded-md text-white" onClick={() => ejectGroups(id)}>-</button>
                         </div>
                     )
                 })}
@@ -59,7 +59,7 @@ export default function Rightbar() {
                         return (
                             <div key={id} className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
                                 <span>{users[id].userName}</span>
-                                <button className="py-1 px-2 font-black bg-red-600 rounded-md" onClick={() => addGroups(id)}>+</button>
+                                <button className="py-1 px-4 font-black bg-red-600 rounded-md text-white" onClick={() => addGroups(id)}>+</button>
                             </div>
                         )
                     }

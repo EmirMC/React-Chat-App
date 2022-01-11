@@ -27,7 +27,8 @@ export default function Leftbar() {
                     )
                 }
             })}
-            <Add type="add_group" addStatus={true} />
+
+            {typeof user.userName === 'string' && <Add type="add_group" addStatus={true} />}
         </div>
     )
 }
