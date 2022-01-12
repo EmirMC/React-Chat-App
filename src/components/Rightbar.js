@@ -1,16 +1,14 @@
 import { mainContext, useContext } from "../context/Store";
 
 export default function Rightbar() {
-    const { selectedGroupId, setSelectedGroupId, setGroups, groups, users } = useContext(mainContext);
+    const { selectedGroupId, setSelectedGroupId, setGroups, groups, users, user } = useContext(mainContext);
 
     const removeGroup = () => {
         setGroups((groups) => {
-            let arr = groups;
+            let arr = [...groups];
             arr = arr.filter((e, i) => {
-                console.log("i: " + i + " id: " + selectedGroupId);
                 return i !== selectedGroupId
             });
-            console.log(arr);
             localStorage.setItem('groups', JSON.stringify(arr));
             setSelectedGroupId(null);
             return arr;
@@ -22,16 +20,20 @@ export default function Rightbar() {
     }
 
     const ejectGroups = (id) => {
-        let arr = groups;
+        if (id === user.userId) {
+            alert("Kendini Silemezsin Grubu Silmen Gerekir!");
+            return;
+        }
+        let arr = [...groups];
         let userArr = arr[selectedGroupId].groupUsers;
-        userArr.splice(userArr.indexOf(id));
+        userArr = userArr.filter(e => e !== id);
         arr[selectedGroupId].groupUsers = userArr;
         localStorage.setItem("groups", JSON.stringify(arr));
         setGroups(arr);
     }
 
     const addGroups = (id) => {
-        let arr = groups;
+        let arr = [...groups];
         let userArr = arr[selectedGroupId].groupUsers;
         userArr.push(id);
         arr[selectedGroupId].groupUsers = userArr;
@@ -45,7 +47,7 @@ export default function Rightbar() {
                 <label className="">Gruptaki Kişiler</label>
                 {groups[selectedGroupId]['groupUsers'].map(id => {
                     return (
-                        <div key={id} className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
+                        <div key={id} className="w-full border-2 dark:border-neutral-200 border-indigo-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
                             <span>{users[id].userName}</span>
                             <button className="py-1 px-4 font-black bg-red-600 rounded-md text-white" onClick={() => ejectGroups(id)}>-</button>
                         </div>
@@ -57,7 +59,7 @@ export default function Rightbar() {
                 {Object.keys(users).map(id => {
                     if (groups[selectedGroupId]['groupUsers'].indexOf(id) === -1) {
                         return (
-                            <div key={id} className="w-full border-2 dark:border-neutral-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
+                            <div key={id} className="w-full border-2 dark:border-neutral-200 border-indigo-200 rounded-md py-2 px-4 flex flex-row justify-between items-center">
                                 <span>{users[id].userName}</span>
                                 <button className="py-1 px-4 font-black bg-red-600 rounded-md text-white" onClick={() => addGroups(id)}>+</button>
                             </div>

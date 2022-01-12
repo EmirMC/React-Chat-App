@@ -16,7 +16,7 @@ export default function Header() {
     }
 
     useEffect(() => {
-        var mode = darkMode === null || darkMode === 'light' ? 'light' : 'dark';
+        var mode = darkMode === null || darkMode === 'dark' ? 'dark' : 'light';
         html.classList.contains(mode === 'light' ? 'dark' : 'light') && html.classList.remove(mode === 'light' ? 'dark' : 'light');
         !html.classList.contains("light") && html.classList.add(mode);
         if (darkMode === null) {
@@ -32,7 +32,7 @@ export default function Header() {
             <div className="hidden peer-checked:flex bg-indigo-600 dark:bg-neutral-600 absolute top-14 left-0 z-10 flex-col border-r border-neutral-200">
                 {Object.keys(users).map(id => {
                     return (
-                        <button key={id} className="py-4 px-8 text-white min-w-min text-center border-b border-neutral-200" onClick={() => setUser({ ...users[id], 'userId': id })}>
+                        <button key={id} className="py-4 px-8 text-white min-w-min text-center border-b border-neutral-200" onClick={() => {setUser({ ...users[id], 'userId': id });document.getElementById("profile").checked = false;}}>
                             {users[id].userName}
                         </button>
                     )

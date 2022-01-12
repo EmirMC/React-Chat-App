@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mainContext, useContext } from "../context/Store";
 
 export default function Add({ type, addStatus }) {
     const [data, setData] = useState("");
-    const { user, setSelectedGroupId, groups, setGroups, selectedGroupId, setMessage, setUsers, users, setUser } = useContext(mainContext);
+    const { user, setSelectedGroupId, groups, setGroups, selectedGroupId, setMessage, message, setUsers, users, setUser } = useContext(mainContext);
 
     function ToSeoUrl(url) {
         return url.toString()               // Convert to string
@@ -18,42 +18,52 @@ export default function Add({ type, addStatus }) {
             .replace(/-*$/, '');             // Remove trailing dashes
     }
 
-    const addFunction = async (data) => {
+    const addFunction = (data) => {
+        if (data === null || data.trim().length === 0) {
+            alert("Boş Bırakmayınız!");
+            return;
+        }
         if (type === 'add_group' && typeof user.userId === 'string') {
+            if (groups.length > 0 && groups.findIndex(e => e.groupName === data) !== -1) {
+                alert("Bu Gurup daha önce eklenmiştir! Lütfen Farklı Bir Gurup Giriniz!");
+                return;
+            }
             setGroups((groups) => {
-                let arr = groups;
-                console.log(arr);
-                arr.push({ 'groupName': data, 'groupUsers': [user.userId], messages: [] });
+                let arr = [...groups];
+                arr.push({ 'groupName': data.trim(), 'groupUsers': [user.userId], messages: [] });
                 localStorage.setItem("groups", JSON.stringify(arr));
                 setSelectedGroupId(arr.length - 1);
                 return arr;
             });
         } else if (type === 'add_message') {
-            setMessage(m => {
-                var time = new Date();
-                time = parseInt(time / 1000);
-                let arr = groups;
-                let nowGroup = groups[selectedGroupId];
-                let tempArr = m;
-                tempArr.push({ userId: user.userId, message: data, createDate: time });
-
-                if (selectedGroupId !== 0) {
-                    nowGroup.messages = tempArr;
-                    arr.splice(selectedGroupId);
-                    arr.unshift(nowGroup);
-                    setSelectedGroupId(0);
-                } else {
-                    arr[0].messages = tempArr;
-                }
-
-                localStorage.setItem("groups", JSON.stringify(arr));
-                setGroups(arr);
-                return tempArr;
-            });
+            var time = new Date();
+            time = parseInt(time / 1000);
+            let tempArr = [...message];
+            tempArr.push({ userId: user.userId, message: data.trim(), createDate: time });
+            
+            let arr = [...groups];
+            let nowGroup = groups[selectedGroupId];
+            if (selectedGroupId !== 0) {
+                nowGroup.messages = tempArr;
+                arr.splice(selectedGroupId);
+                arr.unshift(nowGroup);
+                setSelectedGroupId(0);
+            } else {
+                arr[0].messages = tempArr;
+            }
+            localStorage.setItem("groups", JSON.stringify(arr));
+            setMessage(tempArr);
+            setGroups(arr);
         } else if (type === 'add_user') {
+            if (Object.keys(users).indexOf(ToSeoUrl(data)) !== -1) {
+                alert("Bu kullanıcı daha önce eklenmiştir! Lütfen Farklı Bir Kullanıcı Giriniz!");
+                return;
+            }
             setUser({ userName: data, userId: ToSeoUrl(data) });
-            setUsers({ [ToSeoUrl(data)]: { userName: data }, ...users});
-            localStorage.setItem("users", JSON.stringify({ [ToSeoUrl(data)]: { userName: data }, ...users}));
+            setSelectedGroupId(null);
+            setMessage([]);
+            setUsers({ [ToSeoUrl(data)]: { userName: data }, ...users });
+            localStorage.setItem("users", JSON.stringify({ [ToSeoUrl(data)]: { userName: data.trim() }, ...users }));
         } else {
             alert("Sol Üstten Kullanıcı Seçiniz");
         }

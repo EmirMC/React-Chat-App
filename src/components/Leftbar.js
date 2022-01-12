@@ -1,13 +1,8 @@
 import Add from "./Add";
 import { mainContext, useContext } from "../context/Store";
-import { useEffect } from "react";
 
 export default function Leftbar() {
     const { selectedGroupId, setSelectedGroupId, groups, users, user } = useContext(mainContext);
-
-    useEffect(() => {
-
-    }, [groups, selectedGroupId]);
 
     return (
         <div className="sidebar">
