@@ -55,7 +55,7 @@ export default function Rightbar() {
                 })}
             </div>
             <div className="w-full dark:text-neutral-200 text-neutral-900 gap-3 flex flex-col mt-2.5">
-                <label className="">Gruptaki Kişiler</label>
+                <label className="">Gruba Eklenebilir Kişiler</label>
                 {Object.keys(users).map(id => {
                     if (groups[selectedGroupId]['groupUsers'].indexOf(id) === -1) {
                         return (
